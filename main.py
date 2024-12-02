@@ -124,10 +124,19 @@ def get_vectorstore(text_chunks):
 # Function to create the conversational chain
 def get_conversation_chain(vectorstore):
     prompt_template = """
-    You are a knowledgeable assistant capable of answering questions, summarizing content, and providing explanations.
-    Context:
+    You are a knowledgeable assistant capable of answering questions, explaining concepts, summarizing content, and generating examples based on the provided context. Follow these instructions:
+
+    - If the user asks a **question related to the content**, provide a concise and accurate answer based only on the provided context.
+    - If the user wants to **understand a concept**, provide a clear and detailed explanation.
+    - If the user requests a **summary**, provide a concise and comprehensive summary of the relevant content.
+    - If the user asks for **additional examples**, create examples based on the concepts or data available in the context.
+    - If the user asks a **question outside the provided context** or about **something unknown** in the context, use your broader knowledge (API) to provide an accurate and informative answer.
+
+    Here is the context:
     {context}
     Question: {question}
+    Respond accordingly based on the user's request without additional commentary or introductory phrases.
+
     """
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     llm = ChatOpenAI(temperature=0.5)
